@@ -58,16 +58,6 @@ browser.Host = class {
         this._view = view;
         const age = async () => {
             const days = (new Date() - new Date(this._environment.date)) / (24 * 60 * 60 * 1000);
-            if (days > 180) {
-                const link = this._element('logo-github').href;
-                document.body.classList.remove('spinner');
-                for (;;) {
-                    /* eslint-disable no-await-in-loop */
-                    await this.message('Please update to the newest version.', null, 'Update');
-                    /* eslint-enable no-await-in-loop */
-                    this.openURL(link);
-                }
-            }
             return Promise.resolve();
         };
         const consent = async () => {
