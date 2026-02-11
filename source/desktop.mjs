@@ -94,64 +94,7 @@ desktop.Host = class {
 
     async view(view) {
         this._view = view;
-        const age = async () => {
-            const days = (new Date() - new Date(this._environment.date)) / (24 * 60 * 60 * 1000);
-            if (days > 180) {
-                this.document.body.classList.remove('spinner');
-                const link = this._element('logo-github').href;
-                for (;;) {
-                    /* eslint-disable-next-line no-await-in-loop */
-                    await this.message('Please update to the newest version.', null, 'Download');
-                    this.openURL(link);
-                }
-            }
-            return Promise.resolve();
-        };
-        const consent = async () => {
-            const time = this.get('consent');
-            if (!time || (Date.now() - time) > 30 * 24 * 60 * 60 * 1000) {
-                let consent = true;
-                try {
-                    const content = await this._request('https://ipinfo.io/json', { 'Content-Type': 'application/json' }, 2000);
-                    const json = JSON.parse(content);
-                    const countries = ['AT', 'BE', 'BG', 'HR', 'CZ', 'CY', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'SK', 'ES', 'SE', 'GB', 'UK', 'GR', 'EU', 'RO'];
-                    if (json && json.country && countries.indexOf(json.country) === -1) {
-                        consent = false;
-                    }
-                } catch {
-                    // continue regardless of error
-                }
-                if (consent) {
-                    this.document.body.classList.remove('spinner');
-                    await this.message('This app uses cookies to report errors and anonymous usage information.', null, 'Accept');
-                }
-                this.set('consent', Date.now());
-            }
-        };
-        const telemetry = async () => {
-            if (this._environment.packaged) {
-                const measurement_id = '848W2NVWVH';
-                const user = this.get('user') || null;
-                const session = this.get('session') || null;
-                await this._telemetry.start(`G-${measurement_id}`, user && user.indexOf('.') !== -1 ? user : null, session);
-                this._telemetry.send('page_view', {
-                    app_name: this.type,
-                    app_version: this.version,
-                    app_metadata: this.metadata
-                });
-                this._telemetry.send('scroll', {
-                    percent_scrolled: 90,
-                    app_name: this.type,
-                    app_version: this.version,
-                    app_metadata: this.metadata
-                });
-                this.set('user', this._telemetry.get('client_id'));
-                this.set('session', this._telemetry.session);
-            }
-        };
-        await age();
-        await consent();
-        await telemetry();
+        return Promise.resolve();
     }
 
     async start() {
